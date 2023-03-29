@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import TrainElem from './TrainElem';
 
-export default function Outputlist({list, setForm, setList}) {
+export default function Outputlist({list, setDateInp, setDistInp, setList}) {
   let listIdx = null;
   if (list.length>0) {
     listIdx = list.map(item => { 
@@ -15,7 +15,7 @@ export default function Outputlist({list, setForm, setList}) {
     <ul className="output-block">
     {
       listIdx? listIdx.map((el) =>
-      <TrainElem key={el.id} el={el} list={list} setForm={setForm} setList={setList}/> 
+      <TrainElem key={el.id} el={el} list={list} setDateInp={setDateInp} setDistInp={setDistInp} setList={setList}/> 
       ) : "" 
     }
     </ul>

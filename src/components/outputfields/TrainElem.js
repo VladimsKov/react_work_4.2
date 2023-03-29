@@ -1,8 +1,8 @@
 import { handleDataFunc } from "../../functions"
-export default function TrainElem({el, list, setForm, setList}) {
+export default function TrainElem({el, list, setDateInp, setDistInp, setList}) {
     
     return (
-        <li className="form-table" onClick={handleDataFunc(list, setForm, setList)}>
+        <li className="form-table" onClick={handleDataFunc(list, setDateInp, setDistInp, setList)}>
         <div className="form-elem">{el.value.dateValue.slice(0,6) + "20" + el.value.dateValue.slice(6)}</div>
         <div className="form-elem">{el.value.distance}</div>
         <div className="form-table">

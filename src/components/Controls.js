@@ -3,52 +3,50 @@ import React from "react";
 import InputData from "./inputfields/InputData";
 import Headers from "./outputfields/Headers";
 import Outputlist from "./outputfields/Outputlist";
-import {sortByDate} from "../functions";
-
-let dataVal= {
-  dateValue: "",
-  distance: "" 
-}
+import {sortByDate, validDate, validDist} from "../functions";
 
 export default function Controls() {
-  const [form, setForm] = useState({
-    dateValue: '',
-    distance: '',
-  });
-  const [trainList, setTrainList] = useState([]);
+  const [dateInp, setDateInp] = useState('');
+  const [distInp, setDistInp] = useState('');
   
-  const inputDataChange = function(name) {        
-    return (
-      ({ target }) => {
-        const { value } = target;
-        dataVal[name] = value;
-        setForm(prev => ({ ...prev, [name]: value }));
-      })      
-    }    
+  const [trainList, setTrainList] = useState([]);
+  const inputDateChange = ({ target }) => {
+    const { value } = target;
+    setDateInp(() => value);
+  }      
+  
+  const inputDistChange = ({ target }) => {
+    const { value } = target;
+    setDistInp(() => value);
+  } 
     
-    const addData = (evt) => {
-      evt.preventDefault();
-      setForm(prev => ({ ...prev, dateValue: dataVal.dateValue, distance: dataVal.distance}));
-      const oldDate = trainList.find(item => item.dateValue === form.dateValue);
+  const addData = (evt) => {
+    evt.preventDefault();     
+    if (validDate(dateInp) === null || validDist(distInp) === null) {
+      alert('Некорректная дата либо дистанция');
+      return};       
+      const oldDate = trainList.find(item => item.dateValue === dateInp);
       if (oldDate) { 
-        oldDate.distance = String(Number(oldDate.distance) + Number(form.distance));        
-      } else  trainList.push(form);
+        oldDate.distance = String(Number(oldDate.distance) + Number(distInp));        
+      } else  trainList.push({
+        dateValue: dateInp,
+        distance: distInp,
+      });
       let newList = (trainList.length>1) ? sortByDate(trainList) : trainList;
-      setTrainList(() => newList);            
+      setTrainList(() => newList);      
+      setDateInp(() => '');
+      setDistInp(() => '');            
     }
     
     return (
       <div className="container">
       <form className="form-table" onSubmit={addData}>
-      <InputData headerValue="Дата (ДД.ММ.ГГ)" dataValue={form.dateValue} dataChange={inputDataChange('dateValue')} />
-      <InputData headerValue="Пройдено км" dataValue={form.distance} dataChange={inputDataChange('distance')}  />
+      <InputData headerValue="Дата (ДД.ММ.ГГ)" dataValue={dateInp} dataChange={inputDateChange} />
+      <InputData headerValue="Пройдено км" dataValue={distInp} dataChange={inputDistChange}  />
       <input id="btn" className="inputfield" type="submit" value="OK"/>
       </form>
       <Headers />
-      <Outputlist list={trainList} setForm={setForm} setList={setTrainList}/>
+      <Outputlist list={trainList} setDateInp={setDateInp} setDistInp={setDistInp} setList={setTrainList}/>
       </div>
       )
-    } 
-    
-    
-    
+    }    
